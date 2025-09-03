@@ -1,0 +1,21 @@
+# Node modules
+node_modules/
+
+# Archivos de logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Entorno local
+.env
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de build o distribución (si los tuvieses)
+dist/
+build/
+
+# Archivos de base de datos o datos temporales
+libros.txt
