@@ -17,5 +17,3 @@ Thumbs.db
 dist/
 build/
 
-# Archivos de base de datos o datos temporales
-libros.txt
