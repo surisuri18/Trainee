@@ -8,11 +8,14 @@
 </head>
 <body class="bg-light">
 
-<div class="container d-flex flex-column justify-content-center align-items-center vh-100">
+<div class="container d-flex flex-column justify-content-start align-items-center min-vh-100 py-5">
   <h1 class="mb-4">Biblioteca</h1>
 
+  <!-- Notificaciones -->
+  <div id="alertas" class="w-50"></div>
+
   <!-- Formulario para agregar libros -->
-  <form action="/agregar" method="POST" class="w-50">
+  <form id="form-libro" class="w-50">
     <div class="mb-3">
       <label for="titulo" class="form-label">Título del libro:</label>
       <input type="text" class="form-control" id="titulo" name="titulo" required>
@@ -20,9 +23,71 @@
     <button type="submit" class="btn btn-success w-100">Agregar Libro</button>
   </form>
 
-  <!-- Botón grande para ver lista de libros -->
-  <a href="/libros" class="btn btn-outline-primary btn-lg mt-4" style="border-width: 2px;">Ver Lista de Libros</a>
+  <!-- Lista de libros (siempre al final) -->
+  <div id="lista-libros" class="mt-auto w-75 text-center"></div>
 </div>
 
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+  const form = document.getElementById("form-libro");
+  const alertas = document.getElementById("alertas");
+  const listaLibros = document.getElementById("lista-libros");
+
+  // Mostrar alerta Bootstrap
+  function mostrarAlerta(tipo, mensaje) {
+    alertas.innerHTML = `
+      <div class="alert alert-${tipo} alert-dismissible fade show" role="alert">
+        ${mensaje}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    `;
+  }
+
+  // Cargar libros desde backend
+  async function cargarLibros() {
+    const res = await fetch("/libros");
+    const data = await res.json();
+
+    if (data.libros.length === 0) {
+      listaLibros.innerHTML = `<div class="bg-white p-4 rounded shadow mt-4"><b>No hay libros registrados</b></div>`;
+      return;
+    }
+
+    listaLibros.innerHTML = `
+      <div class="bg-white p-4 rounded shadow mt-4">
+        <h3 class="fw-bold mb-3">Lista de Libros</h3>
+        <ul class="list-group">
+          ${data.libros.map(libro => `<li class="list-group-item fw-bold">${libro}</li>`).join("")}
+        </ul>
+      </div>
+    `;
+  }
+
+  // Enviar formulario
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const titulo = document.getElementById("titulo").value.trim();
+
+    const res = await fetch("/agregar", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ titulo })
+    });
+
+    const data = await res.json();
+    if (res.ok) {
+      mostrarAlerta("success", data.mensaje);
+      form.reset();
+      cargarLibros();
+    } else {
+      mostrarAlerta("danger", data.error);
+    }
+  });
+
+  // Cargar lista al inicio
+  cargarLibros();
+</script>
 </body>
 </html>
