@@ -2,29 +2,16 @@
 #include <stdlib.h>
 #include <limits.h>
 
-/*
-    Estructura Nodo:
-    - Representa cada elemento de la cola.
-    - Contiene el valor del nodo y un puntero al siguiente nodo.
-*/
 struct Nodo {
     int valor;
     struct Nodo* siguiente;
 };
 
-/*
-    Estructura ColaMinimo:
-    - front: puntero al primer nodo (cabeza de la cola).
-    - rear: puntero al último nodo (final de la cola).
-*/
 struct ColaMinimo {
     struct Nodo* front;
-    struct Nodo* rear;
+    struct Nodo* rear; // solo para encolar
 };
 
-/*
-    Crear un nuevo nodo con un valor dado.
-*/
 struct Nodo* crearNodo(int valor) {
     struct Nodo* nuevo = (struct Nodo*) malloc(sizeof(struct Nodo));
     nuevo->valor = valor;
@@ -32,18 +19,11 @@ struct Nodo* crearNodo(int valor) {
     return nuevo;
 }
 
-/*
-    Inicializa una ColaMinimo vacía.
-*/
 void inicializarCola(struct ColaMinimo* cola) {
     cola->front = NULL;
     cola->rear = NULL;
 }
 
-/*
-    Método encolar:
-    - Inserta un valor al final de la cola (FIFO).
-*/
 void encolar(struct ColaMinimo* cola, int valor) {
     struct Nodo* nuevo = crearNodo(valor);
 
@@ -56,11 +36,6 @@ void encolar(struct ColaMinimo* cola, int valor) {
     }
 }
 
-/*
-    Método desencolar:
-    - Elimina el valor del frente de la cola.
-    - Devuelve el valor eliminado, o INT_MIN si la cola está vacía.
-*/
 int desencolar(struct ColaMinimo* cola) {
     if (cola->front == NULL) {
         printf("La cola está vacía. No se puede desencolar.\n");
@@ -71,20 +46,12 @@ int desencolar(struct ColaMinimo* cola) {
     int valor = temp->valor;
 
     cola->front = cola->front->siguiente;
-
-    if (cola->front == NULL) {
-        cola->rear = NULL; // La cola quedó vacía
-    }
+    if (cola->front == NULL) cola->rear = NULL; // la cola quedó vacía
 
     free(temp);
     return valor;
 }
 
-/*
-    Método minimo:
-    - Recorre la cola y devuelve el valor mínimo.
-    - Si está vacía, devuelve INT_MAX.
-*/
 int minimo(struct ColaMinimo* cola) {
     if (cola->front == NULL) {
         printf("La cola está vacía. No hay mínimo.\n");
@@ -94,19 +61,15 @@ int minimo(struct ColaMinimo* cola) {
     int min = cola->front->valor;
     struct Nodo* actual = cola->front;
 
+    // recorremos hasta que actual sea NULL, no necesitamos puntero extra
     while (actual != NULL) {
-        if (actual->valor < min) {
-            min = actual->valor;
-        }
+        if (actual->valor < min) min = actual->valor;
         actual = actual->siguiente;
     }
 
     return min;
 }
 
-/*
-    Función principal para probar la ColaMinimo
-*/
 int main() {
     struct ColaMinimo cola;
     inicializarCola(&cola);
@@ -117,17 +80,15 @@ int main() {
     encolar(&cola, 2);
 
     printf("Mínimo actual: %d\n", minimo(&cola)); // 2
-
     printf("Desencolado: %d\n", desencolar(&cola)); // 5
     printf("Mínimo actual: %d\n", minimo(&cola)); // 2
 
-    desencolar(&cola); // 3
-    desencolar(&cola); // 7
-
+    printf("Desencolado: %d\n", desencolar(&cola)); // 3
+    printf("Desencolado: %d\n", desencolar(&cola)); // 7
     printf("Mínimo actual: %d\n", minimo(&cola)); // 2
 
-    desencolar(&cola); // 2
-    minimo(&cola); // La cola está vacía
+    printf("Desencolado: %d\n", desencolar(&cola)); // 2
+    minimo(&cola); // cola vacía
 
     return 0;
 }

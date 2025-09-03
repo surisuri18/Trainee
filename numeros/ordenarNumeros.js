@@ -1,6 +1,6 @@
 function ordenarUnicos(lista) {
   // new Set elimina duplicados, Array.from lo convierte en array
-  return Array.from(new Set(lista)).sort((a, b) => a - b); //estudiarlo
+  return Array.from(new Set(lista)).sort((a, b) => a - b); 
 }
 
 //  uso
