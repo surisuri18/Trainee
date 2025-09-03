@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestión de Libros</title>
+</head>
+<body>
+  <h1>Biblioteca</h1>
+
+  <!-- Formulario para agregar un libro -->
+  <form action="/agregar" method="POST">
+    <label for="titulo">Título del libro:</label>
+    <input type="text" id="titulo" name="titulo" required />
+    <button type="submit">Agregar</button>
+  </form>
+
+  <br />
+
+  <!-- Link para listar libros -->
+  <a href="/libros">Ver lista de libros</a>
+</body>
+</html>
